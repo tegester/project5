@@ -7,5 +7,6 @@ public class Project5 {
 		solve.bFS(0, 0);
 		//solve.showPuzzle();
 		//solve.prefixTest("lear");
+		//solve.search(5, 3);
 	}
 }

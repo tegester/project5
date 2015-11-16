@@ -71,14 +71,14 @@ public class Solver {
 			System.out.println("search out of bounds");
 			System.exit(1);
 		}
-		if(i-4 >= 0){searchN(i,j);}
+		if(i-3 >= 0){searchN(i,j);}
 		if(j+4 <= size){searchE(i,j);}
 		if(i+4 <= size){searchS(i,j);}
-		if(j-4 >= 0){searchW(i,j);}
-		if(i-4 >= 0 && j+4 <= size){searchNE(i,j);}
-		if(i-4 >= 0 && j-4 >= 0){searchNW(i,j);}
+		if(j-3 >= 0){searchW(i,j);}
+		if(i-3 >= 0 && j+4 <= size){searchNE(i,j);}
+		if(i-3 >= 0 && j-3 >= 0){searchNW(i,j);}
 		if(i+4 <= size && j+4 <= size){searchSE(i,j);}
-		if(i+4 <= size && j-4 >= 0){searchSW(i,j);}
+		if(i+4 <= size && j-3 >= 0){searchSW(i,j);}
 		System.gc();
 	}
 	
