@@ -3,7 +3,7 @@ import java.util.TreeSet;
 
 
 public class Solver {
-	private Node puzzle[][];
+	private char puzzle[][];
 	private int size;
 	private TreeSet<String> words;
 	
@@ -12,12 +12,12 @@ public class Solver {
 		//read in the puzzle
 		Read reader = new Read("puzzle.txt");
 		size = Integer.parseInt(reader.readLine());
-		puzzle = new Node[size][size];
+		puzzle = new char[size][size];
 		int i = 0;
 		while(reader.ready()){
 			String[] temp = reader.readLine().split(" ");
 			for(int j = 0; j< size; j++){
-				puzzle[i][j] = new Node(temp[j].charAt(0));
+				puzzle[i][j] = temp[j].charAt(0);
 			}
 			i++;
 		}
@@ -48,21 +48,11 @@ public class Solver {
 	 }
 	
 	//search the puzzle for the words move only along major lines
-	//can start at any point recommend starting at 0,0
-	public void bFS(int i, int j){
-		puzzle[i][j].setColor(1);
-		search(i,j);
-		if(i+1 < size && puzzle[i+1][j].getColor() == 0){
-			bFS(i+1,j);
-		}		
-		if(j+1 < size && puzzle[i][j+1].getColor() == 0){
-			bFS(i,j+1);
-		}
-		if(i-1 >= 0 && puzzle[i-1][j].getColor() == 0){
-			bFS(i-1,j);
-		}	
-		if(j-1 >= 0 && puzzle[i][j-1].getColor() == 0){
-			bFS(i,j-1);
+	public void walkPuzzle(){
+		for (int i = 0; i < size;i++ ){
+			for (int j =0; j<size;j++){
+				search(i,j);
+			}
 		}
 	}
 	
@@ -86,30 +76,27 @@ public class Solver {
 		StringBuffer posWord = new StringBuffer();
 		char c;
 		for(int k = 0; k < 4; k++){
-			c = puzzle[i-k][j].getLetter();
+			c = puzzle[i-k][j];
 			posWord.append(c);
 		}
-		//**** warning subtree is an alias ***** 
-		TreeSet<String> subtree = words;
-		boolean isword = subtree.contains(posWord.toString());
+		boolean isword = words.contains(posWord.toString());
 		if(isword){
 			System.out.println(posWord +"("+(j+1)+","+(i+1)+",n)");
 		}
 		SortedSet<String> subset;
-		subset = subtree.subSet((posWord.toString()+"a"), (posWord.toString()+"z"));
+		subset = words.subSet((posWord.toString()+"a"), (posWord.toString()+"z"));
 		//same k from for loop 12 lines up
 		int k = 4;
 		while(!subset.isEmpty()){
 			//not sure that this is a good idea
-			subtree = new TreeSet<String>(subset);
 			if(i-k<0){break;}
-			c = puzzle[i-k][j].getLetter();
+			c = puzzle[i-k][j];
 			posWord.append(c);
-			isword = subtree.contains(posWord.toString());
+			isword = subset.contains(posWord.toString());
 			if(isword){
 				System.out.println(posWord +"("+(j+1)+","+(i+1)+",n)");
 			}
-			subset = words.subSet(posWord.toString()+"a", posWord.toString()+"z");
+			subset = subset.subSet(posWord.toString()+"a", posWord.toString()+"z");
 			k++;
 		}	
 	}
@@ -118,30 +105,26 @@ public class Solver {
 		StringBuffer posWord = new StringBuffer();
 		char c;
 		for(int k = 0; k < 4; k++){
-			c = puzzle[i-k][j+k].getLetter();
+			c = puzzle[i-k][j+k];
 			posWord.append(c);
 		}
-		//**** warning subtree is an alias ***** 
-		TreeSet<String> subtree = words;
-		boolean isword = subtree.contains(posWord.toString());
+		boolean isword = words.contains(posWord.toString());
 		if(isword){
 			System.out.println(posWord +"("+(j+1)+","+(i+1)+",ne)");
 		}
 		SortedSet<String> subset;
-		subset = subtree.subSet((posWord.toString()+"a"), (posWord.toString()+"z"));
+		subset = words.subSet((posWord.toString()+"a"), (posWord.toString()+"z"));
 		//same k from for loop 12 lines up
 		int k = 4;
 		while(!subset.isEmpty()){
-			//not sure that this is a good idea
-			subtree = new TreeSet<String>(subset);
-			if(i-k < 0 || j+k > size){break;}
-			c = puzzle[i-k][j+k].getLetter();
+			if(i-k < 0 || j+k >= size){break;}
+			c = puzzle[i-k][j+k];
 			posWord.append(c);
-			isword = subtree.contains(posWord.toString());
+			isword = subset.contains(posWord.toString());
 			if(isword){
 				System.out.println(posWord +"("+(j+1)+","+(i+1)+",ne)");
 			}
-			subset = words.subSet(posWord.toString()+"a", posWord.toString()+"z");
+			subset = subset.subSet(posWord.toString()+"a", posWord.toString()+"z");
 			k++;
 		}
 	}
@@ -149,30 +132,26 @@ public class Solver {
 		StringBuffer posWord = new StringBuffer();
 		char c;
 		for(int k = 0; k < 4; k++){
-			c = puzzle[i][j+k].getLetter();
+			c = puzzle[i][j+k];
 			posWord.append(c);
 		}
-		//**** warning subtree is an alias ***** 
-		TreeSet<String> subtree = words;
-		boolean isword = subtree.contains(posWord.toString());
+		boolean isword = words.contains(posWord.toString());
 		if(isword){
 			System.out.println(posWord +"("+(j+1)+","+(i+1)+",e)");
 		}
 		SortedSet<String> subset;
-		subset = subtree.subSet((posWord.toString()+"a"), (posWord.toString()+"z"));
+		subset = words.subSet((posWord.toString()+"a"), (posWord.toString()+"z"));
 		//same k from for loop 12 lines up
 		int k = 4;
 		while(!subset.isEmpty()){
-			//not sure that this is a good idea
-			subtree = new TreeSet<String>(subset);
-			if(j+k > size){break;}
-			c = puzzle[i][j+k].getLetter();
+			if(j+k >= size){break;}
+			c = puzzle[i][j+k];
 			posWord.append(c);
-			isword = subtree.contains(posWord.toString());
+			isword = subset.contains(posWord.toString());
 			if(isword){
 				System.out.println(posWord +"("+(j+1)+","+(i+1)+",e)");
 			}
-			subset = words.subSet(posWord.toString()+"a", posWord.toString()+"z");
+			subset = subset.subSet(posWord.toString()+"a", posWord.toString()+"z");
 			k++;
 		}
 	}
@@ -180,30 +159,26 @@ public class Solver {
 		StringBuffer posWord = new StringBuffer();
 		char c;
 		for(int k = 0; k < 4; k++){
-			c = puzzle[i+k][j+k].getLetter();
+			c = puzzle[i+k][j+k];
 			posWord.append(c);
 		}
-		//**** warning subtree is an alias ***** 
-		TreeSet<String> subtree = words;
-		boolean isword = subtree.contains(posWord.toString());
+		boolean isword = words.contains(posWord.toString());
 		if(isword){
 			System.out.println(posWord +"("+(j+1)+","+(i+1)+",se)");
 		}
 		SortedSet<String> subset;
-		subset = subtree.subSet((posWord.toString()+"a"), (posWord.toString()+"z"));
+		subset = words.subSet((posWord.toString()+"a"), (posWord.toString()+"z"));
 		//same k from for loop 12 lines up
 		int k = 4;
 		while(!subset.isEmpty()){
-			//not sure that this is a good idea
-			subtree = new TreeSet<String>(subset);
-			if(i+k > size || j+k > size){break;}
-			c = puzzle[i+k][j+k].getLetter();
+			if(i+k >= size || j+k >= size){break;}
+			c = puzzle[i+k][j+k];
 			posWord.append(c);
-			isword = subtree.contains(posWord.toString());
+			isword = subset.contains(posWord.toString());
 			if(isword){
 				System.out.println(posWord +"("+(j+1)+","+(i+1)+",se)");
 			}
-			subset = words.subSet(posWord.toString()+"a", posWord.toString()+"z");
+			subset = subset.subSet(posWord.toString()+"a", posWord.toString()+"z");
 			k++;
 		}
 	}
@@ -211,30 +186,26 @@ public class Solver {
 		StringBuffer posWord = new StringBuffer();
 		char c;
 		for(int k = 0; k < 4; k++){
-			c = puzzle[i+k][j].getLetter();
+			c = puzzle[i+k][j];
 			posWord.append(c);
 		}
-		//**** warning subtree is an alias ***** 
-		TreeSet<String> subtree = words;
-		boolean isword = subtree.contains(posWord.toString());
+		boolean isword = words.contains(posWord.toString());
 		if(isword){
 			System.out.println(posWord +"("+(j+1)+","+(i+1)+",s)");
 		}
 		SortedSet<String> subset;
-		subset = subtree.subSet((posWord.toString()+"a"), (posWord.toString()+"z"));
+		subset = words.subSet((posWord.toString()+"a"), (posWord.toString()+"z"));
 		//same k from for loop 12 lines up
 		int k = 4;
 		while(!subset.isEmpty()){
-			//not sure that this is a good idea
-			subtree = new TreeSet<String>(subset);
-			if(i+k > size){break;}
-			c = puzzle[i+k][j].getLetter();
+			if(i+k >= size){break;}
+			c = puzzle[i+k][j];
 			posWord.append(c);
-			isword = subtree.contains(posWord.toString());
+			isword = subset.contains(posWord.toString());
 			if(isword){
 				System.out.println(posWord +"("+(j+1)+","+(i+1)+",s)");
 			}
-			subset = words.subSet(posWord.toString()+"a", posWord.toString()+"z");
+			subset = subset.subSet(posWord.toString()+"a", posWord.toString()+"z");
 			k++;
 		}
 	}
@@ -242,30 +213,28 @@ public class Solver {
 		StringBuffer posWord = new StringBuffer();
 		char c;
 		for(int k = 0; k < 4; k++){
-			c = puzzle[i+k][j-k].getLetter();
+			c = puzzle[i+k][j-k];
 			posWord.append(c);
 		}
-		//**** warning subtree is an alias ***** 
-		TreeSet<String> subtree = words;
-		boolean isword = subtree.contains(posWord.toString());
+		boolean isword = words.contains(posWord.toString());
 		if(isword){
 			System.out.println(posWord +"("+(j+1)+","+(i+1)+",sw)");
 		}
 		SortedSet<String> subset;
-		subset = subtree.subSet((posWord.toString()+"a"), (posWord.toString()+"z"));
+		subset = words.subSet((posWord.toString()+"a"), (posWord.toString()+"z"));
 		//same k from for loop 12 lines up
 		int k = 4;
 		while(!subset.isEmpty()){
 			//not sure that this is a good idea
-			subtree = new TreeSet<String>(subset);
-			if(i+k > size || j-k < 0){break;}
-			c = puzzle[i+k][j-k].getLetter();
+			subset = new TreeSet<String>(subset);
+			if(i+k >= size || j-k < 0){break;}
+			c = puzzle[i+k][j-k];
 			posWord.append(c);
-			isword = subtree.contains(posWord.toString());
+			isword = subset.contains(posWord.toString());
 			if(isword){
 				System.out.println(posWord +"("+(j+1)+","+(i+1)+",sw)");
 			}
-			subset = words.subSet(posWord.toString()+"a", posWord.toString()+"z");
+			subset = subset.subSet(posWord.toString()+"a", posWord.toString()+"z");
 			k++;
 		}
 	}
@@ -273,30 +242,26 @@ public class Solver {
 		StringBuffer posWord = new StringBuffer();
 		char c;
 		for(int k = 0; k < 4; k++){
-			c = puzzle[i][j-k].getLetter();
+			c = puzzle[i][j-k];
 			posWord.append(c);
 		}
-		//**** warning subtree is an alias ***** 
-		TreeSet<String> subtree = words;
-		boolean isword = subtree.contains(posWord.toString());
+		boolean isword = words.contains(posWord.toString());
 		if(isword){
 			System.out.println(posWord +"("+(j+1)+","+(i+1)+",w)");
 		}
 		SortedSet<String> subset;
-		subset = subtree.subSet((posWord.toString()+"a"), (posWord.toString()+"z"));
+		subset = words.subSet((posWord.toString()+"a"), (posWord.toString()+"z"));
 		//same k from for loop 12 lines up
 		int k = 4;
 		while(!subset.isEmpty()){
-			//not sure that this is a good idea
-			subtree = new TreeSet<String>(subset);
 			if(j-k < 0){break;}
-			c = puzzle[i][j-k].getLetter();
+			c = puzzle[i][j-k];
 			posWord.append(c);
-			isword = subtree.contains(posWord.toString());
+			isword = subset.contains(posWord.toString());
 			if(isword){
 				System.out.println(posWord +"("+(j+1)+","+(i+1)+",w)");
 			}
-			subset = words.subSet(posWord.toString()+"a", posWord.toString()+"z");
+			subset = subset.subSet(posWord.toString()+"a", posWord.toString()+"z");
 			k++;
 		}
 	}
@@ -304,30 +269,26 @@ public class Solver {
 		StringBuffer posWord = new StringBuffer();
 		char c;
 		for(int k = 0; k < 4; k++){
-			c = puzzle[i-k][j-k].getLetter();
+			c = puzzle[i-k][j-k];
 			posWord.append(c);
 		}
-		//**** warning subtree is an alias ***** 
-		TreeSet<String> subtree = words;
-		boolean isword = subtree.contains(posWord.toString());
+		boolean isword = words.contains(posWord.toString());
 		if(isword){
 			System.out.println(posWord +"("+(j+1)+","+(i+1)+",nw)");
 		}
 		SortedSet<String> subset;
-		subset = subtree.subSet((posWord.toString()+"a"), (posWord.toString()+"z"));
+		subset = words.subSet((posWord.toString()+"a"), (posWord.toString()+"z"));
 		//same k from for loop 12 lines up
 		int k = 4;
 		while(!subset.isEmpty()){
-			//not sure that this is a good idea
-			subtree = new TreeSet<String>(subset);
 			if(i-k < 0 || j-k < 0){break;}
-			c = puzzle[i-k][j-k].getLetter();
+			c = puzzle[i-k][j-k];
 			posWord.append(c);
-			isword = subtree.contains(posWord.toString());
+			isword = subset.contains(posWord.toString());
 			if(isword){
 				System.out.println(posWord +"("+(j+1)+","+(i+1)+",nw)");
 			}
-			subset = words.subSet(posWord.toString()+"a", posWord.toString()+"z");
+			subset = subset.subSet(posWord.toString()+"a", posWord.toString()+"z");
 			k++;
 		}
 	}
@@ -338,4 +299,6 @@ public class Solver {
 		System.out.println(words.contains(ilist));
 		System.out.println(newwords);
 	}
+
 }
+
