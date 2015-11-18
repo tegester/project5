@@ -51,7 +51,9 @@ public class Solver {
 	public void walkPuzzle(){
 		for (int i = 0; i < size;i++ ){
 			for (int j =0; j<size;j++){
-				search(i,j);
+//				search(i,j);
+				Search explore = new Search(i,j,size,puzzle,words);
+				explore.run();
 			}
 		}
 	}

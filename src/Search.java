@@ -31,7 +31,6 @@ public class Search implements Runnable {
 		if(i-3 >= 0 && j-3 >= 0){searchNW(i,j);}
 		if(i+4 <= size && j+4 <= size){searchSE(i,j);}
 		if(i+4 <= size && j-3 >= 0){searchSW(i,j);}
-		System.gc();
 	}
 
 	
